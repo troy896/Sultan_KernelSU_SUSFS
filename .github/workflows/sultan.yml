@@ -152,7 +152,7 @@ jobs:
           
       - name : Apply HYMOFS patch
         run: |
-          cd "$CONFIG/common"
+          cd "$CONFIG"
           curl -LSs https://github.com/Anatdx/HymoFS/raw/refs/heads/main/patch/dirtyhymofs.patch -o dirtyhymofs.patch
           patch -p1 -F 3 < dirtyhymofs.patch
           
