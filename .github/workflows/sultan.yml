@@ -85,7 +85,8 @@ jobs:
           cd "$CONFIG"
 
           echo "Adding KernelSU..."
-          curl -LSs "https://raw.githubusercontent.com/WildKernels/Wild_KSU/wild/kernel/setup.sh" | bash -s wild
+          # curl -LSs "https://raw.githubusercontent.com/WildKernels/Wild_KSU/wild/kernel/setup.sh" | bash -s wild
+          curl -LSs "https://raw.githubusercontent.com/ReSukiSU/ReSukiSU/main/kernel/setup.sh" | bash -s builtin
 
       - name: Apply SUSFS Patches
         if: ${{ matrix.variant != 'WKSU' }}
@@ -110,6 +111,19 @@ jobs:
           cp ../kernel_patches/wild/susfs_fix_patches/v${SUSFS_VERSION}/a14-6.1/base.c.patch ./
           patch -p1 < base.c.patch
 
+      - name: Apply a patch to hide a certain feature.
+        run: |
+          echo "Changed to configuration directory: $CONFIG..."
+          cd "$CONFIG/common"
+          # Apply additional patch
+          if [ "${{ matrix.variant }}" != "WKSU" ]; then
+          curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU_patch/refs/heads/main/69_hide_stuff.patch" -o 69_hide_stuff.patch
+          patch -p1 -F 3 < 69_hide_stuff.patch
+          else
+            cp ../../kernel_patches/69_hide_stuff.patch ./
+            patch -p1 -F 3 < 69_hide_stuff.patch
+          fi
+          
       - name: Configure KernelSU
         run: |
           cd "$CONFIG"
@@ -215,7 +229,7 @@ jobs:
           cd "$CONFIG"
 
           echo "Running sed commands..."
-          sed -i 's/CONFIG_LOCALVERSION="-Sultan"/CONFIG_LOCALVERSION="-Sultan-Wild"/' ./arch/arm64/configs/${{ inputs.codename }}_defconfig
+          sed -i 's/CONFIG_LOCALVERSION="-Sultan"/CONFIG_LOCALVERSION="-CasukiSu"/' ./arch/arm64/configs/${{ inputs.codename }}_defconfig
 
       - name: Build the Kernel
         run: |
