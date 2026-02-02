@@ -222,9 +222,9 @@ jobs:
         run: |
           echo "Patching Image file..."
             
-          cp -r SukiSU_patch/kpm/patch_linux "$CONFIG/bazel-bin/common/kernel_aarch64/patch"
+          cp -r SukiSU_patch/kpm/patch_linux "$CONFIG/kernel_aarch64/patch"
             
-          cd "$CONFIG/bazel-bin/common/kernel_aarch64/"
+          cd "$CONFIG/kernel_aarch64/"
 
           chmod 777 patch
           ./patch
