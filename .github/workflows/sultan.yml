@@ -125,19 +125,6 @@ jobs:
           patch -p1 -F3 --forward < clear_page_16bytes_align__pi.patch
           patch -p1 --forward < "../Action-Build/patches/unicode_bypass_fix_6.1+.patch" || true
 
-      - name: Repair Image files for Android 14 and Android 15 (Sukisu only)
-        run: |
-          echo "Patching Image file..."
-            
-          cp -r SukiSU_patch/kpm/patch_linux "$CONFIG/bazel-bin/common/kernel_aarch64/patch"
-            
-          cd "$CONFIG/bazel-bin/common/kernel_aarch64/"
-
-          chmod 777 patch
-          ./patch
-          rm -rf Image
-          mv oImage Image
-          
       - name: Configure KernelSU
         run: |
           cd "$CONFIG"
@@ -231,6 +218,19 @@ jobs:
           make CROSS_COMPILE=$GITHUB_WORKSPACE/gcc-14.2.0-nolibc/aarch64-linux/bin/aarch64-linux- CC=$GITHUB_WORKSPACE/gcc-14.2.0-nolibc/aarch64-linux/bin/aarch64-linux-gcc -j$(nproc --all) ${{ inputs.codename }}_defconfig
           make CROSS_COMPILE=$GITHUB_WORKSPACE/gcc-14.2.0-nolibc/aarch64-linux/bin/aarch64-linux- CC=$GITHUB_WORKSPACE/gcc-14.2.0-nolibc/aarch64-linux/bin/aarch64-linux-gcc -j$(nproc --all)
 
+      - name: Repair Image files for Android 14 and Android 15 (Sukisu only)
+        run: |
+          echo "Patching Image file..."
+            
+          cp -r SukiSU_patch/kpm/patch_linux "$CONFIG/bazel-bin/common/kernel_aarch64/patch"
+            
+          cd "$CONFIG/bazel-bin/common/kernel_aarch64/"
+
+          chmod 777 patch
+          ./patch
+          rm -rf Image
+          mv oImage Image
+          
       - name: Copy Images
         run: |
           echo "Changing to configuration directory: $CONFIG..."
