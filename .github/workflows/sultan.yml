@@ -71,6 +71,7 @@ jobs:
           git clone https://github.com/TheWildJames/kernel_patches.git
           #git clone https://github.com/kerneltoast/${{ inputs.repo }}
           git clone https://github.com/kerneltoast/android_kernel_google_tensynos
+          git clone https://github.com/Numbersf/Action-Build.git
           SUSFS_BRANCH="gki-${{ inputs.android_version }}-${{ inputs.kernel_version }}"
           echo "Using branch for SUSFS: $SUSFS_BRANCH"
           git clone https://gitlab.com/simonpunk/susfs4ksu.git -b "$SUSFS_BRANCH"
@@ -114,6 +115,14 @@ jobs:
           # Apply additional patch
           curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU_patch/refs/heads/main/69_hide_stuff.patch" -o 69_hide_stuff.patch
           patch -p1 -F 3 < 69_hide_stuff.patch
+
+      - name: Apply UNICODE_BYPASS and MEMORY_OPT
+        run: |
+          cd "$CONFIG"
+          cp "../kernel_patches/common/clear_page_16bytes_align.patch" ./
+          sed -e 's/SYM_FUNC_START_PI(clear_page)/SYM_FUNC_START_PI(__pi_clear_page)/' clear_page_16bytes_align.patch > clear_page_16bytes_align__pi.patch
+          patch -p1 -F3 --forward < clear_page_16bytes_align__pi.patch
+          patch -p1 --forward < "../Action-Build/patches/unicode_bypass_fix_6.1+.patch" || true
           
       - name: Configure KernelSU
         run: |
