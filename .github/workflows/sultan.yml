@@ -175,7 +175,7 @@ jobs:
           cd "$CONFIG"
 
           echo "Running sed commands..."
-          sed -i 's/CONFIG_LOCALVERSION="-Sultan"/CONFIG_LOCALVERSION="-android14-11-gb812b232b095-ab14605088"/' ./arch/arm64/configs/${{ inputs.codename }}_defconfig
+          sed -i 's/CONFIG_LOCALVERSION="-Sultan+"/CONFIG_LOCALVERSION="-android14-11-gb812b232b095-ab14605088"/' ./arch/arm64/configs/${{ inputs.codename }}_defconfig
 
       - name: Build the Kernel
         run: |
